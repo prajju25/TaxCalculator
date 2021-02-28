@@ -1,0 +1,57 @@
+:host ::ng-deep .p-button {
+    margin-right: .25rem;
+}
+
+:host ::ng-deep .p-tabview p {
+    line-height: 1.5;
+    margin: 0;
+}
+
+:host ::ng-deep .p-tabview-panel {
+    height: 500px !important;
+}
+
+.sizes {
+    .p-inputtext {
+        display: block;
+        margin-bottom: .5rem;
+
+        &:last-child {
+            margin-bottom: 0;
+        }
+    }
+}
+input.p-invalid{
+    border-color: red;
+}
+.p-invalid{
+    color: red;
+}
+.user-app{
+    height: 500px;
+    margin: auto;
+    width: 50%;
+    padding: 170px 0;
+}
+
+.p-field * {
+    display: block;
+}
+.p-field.p-col-3{
+    border: 2px solid #000;
+    margin-right: 5px;
+}
+:host ::ng-deep .p-dropdown {
+    width: 14rem;
+}
+.calculate-tax{
+    margin-top: 10px;
+}
+.dialog-button{
+    display: inline !important;
+    margin-top: 10px;
+    margin-right: 10px;
+}
+.btn{
+    margin-left: 10px;
+}
