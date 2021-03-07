@@ -1,0 +1,72 @@
+<div class="container">
+    <div class="card user-app" *ngIf="isLoading">
+        <i class="pi pi-spin pi-spinner" style="font-size: 4rem"></i>
+    </div>
+    <div class="card" *ngIf="!isLoading">
+        <table>
+            <tr>
+                <th>Particulars</th>
+                <th>Old Tax Regime (Rs)</th>
+                <th>New Tax Regime (Rs)</th>
+            </tr>
+            <tr>
+                <td>Gross Income</td>
+                <td>{{oldRegime.grossSalary}}</td>
+                <td>{{newRegime.grossSalary}}</td>
+            </tr>
+            <tr>
+                <td>Deductions:</td>
+                <td></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>u/Sec: 80C</td>
+                <td>{{oldRegime.section80C}}</td>
+                <td>-</td>
+            </tr>
+            <tr>
+                <td>u/Sec: Chapter VI-A</td>
+                <td>{{oldRegime.section4A}}</td>
+                <td>-</td>
+            </tr>
+            <tr>
+                <td><em>Taxable Income</em>></td>
+                <td>{{oldRegime.taxableIncome}}</td>
+                <td>{{newRegime.taxableIncome}}</td>
+            </tr>
+            <tr>
+                <td><em>Tax Slab</em></td>
+                <td>
+                    0 to 2.5 Lakh => 0<br>
+                    2.5 to 5 Lakh @ 5% => {{oldRegime.taxableIncome > 250000 ? (oldRegime.taxableIncome <= 500000 ? (oldRegime.taxableIncome - 250000) * 0.05 : 12500) : '-'}}<br>
+                    5 Lakh to 10 Lakh @ 20% => {{oldRegime.taxableIncome > 500000 ? (oldRegime.taxableIncome <= 1000000 ? (oldRegime.taxableIncome - 500000) * 0.2 : 100000) : '-'}}<br>
+                    > 10 Lakh @ 30% => {{oldRegime.taxableIncome > 1000000 ? ((oldRegime.taxableIncome - 1000000) * 0.3) : '-'}}
+                </td>
+                <td>
+                    0 to 2.5 Lakh => 0<br>
+                    2.5 to 5 Lakh @ 5% => {{newRegime.taxableIncome > 250000 ? (newRegime.taxableIncome <= 500000 ? (oldRegime.taxableIncome - 250000) * 0.05 : 12500) : '-'}}<br>
+                    5 to 7.5 Lakh @ 10% => {{newRegime.taxableIncome > 500000 ? (newRegime.taxableIncome <= 750000 ? (oldRegime.taxableIncome - 500000) * 0.1 : 25000) : '-'}}<br>
+                    7.5 Lakh to 10 Lakh @ 15% => {{newRegime.taxableIncome > 750000 ? (newRegime.taxableIncome <= 1000000 ? (oldRegime.taxableIncome - 750000) * 0.15 : 37500) : '-'}}<br>
+                    10 Lakh to 12.5 Lakh @ 20% => {{newRegime.taxableIncome > 1000000 ? (newRegime.taxableIncome <= 1250000 ? (oldRegime.taxableIncome - 1000000) * 0.2 : 50000) : '-'}}<br>
+                    12.5 Lakh to 15 Lakh @ 25% => {{newRegime.taxableIncome > 1250000 ? (newRegime.taxableIncome <= 1500000 ? (oldRegime.taxableIncome - 1250000) * 0.25 : 62500) : '-'}}<br>
+                    > 15 Lakh @ 30% => {{newRegime.taxableIncome > 1500000 ? ((newRegime.taxableIncome - 1500000) * 0.3) : '-'}}
+                </td>
+            </tr>
+            <tr>
+                <td>Income Tax</td>
+                <td>{{oldRegime.incomeTax}}</td>
+                <td>{{newRegime.incomeTax}}</td>
+            </tr>
+            <tr>
+                <td>Cess @ 4%</td>
+                <td>{{oldRegime.cess}}</td>
+                <td>{{newRegime.cess}}</td>
+            </tr>
+            <tr>
+                <td><em>Total Tax per year</em></td>
+                <td><em>{{oldRegime.totalTax}}</em></td>
+                <td><em>{{newRegime.totalTax}}</em></td>
+            </tr>
+        </table>
+    </div>
+</div>

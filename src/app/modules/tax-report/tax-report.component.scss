@@ -1,0 +1,29 @@
+.user-app{
+    height: 500px;
+    margin: auto;
+    width: 50%;
+    padding: 170px 0;
+}
+th {
+    text-align: left;
+    padding: 1rem 1rem;
+    border: 1px solid #e9ecef;
+    border-width: 1px 1px 1px 1px;
+    font-weight: 600;
+    color: #495057;
+    background: #f8f9fa;
+    transition: box-shadow 0.2s;
+}
+tr {
+    background: #ffffff;
+    color: #495057;
+    transition: box-shadow 0.2s;
+    outline-color: #a6d5fa;
+}
+tr > td {
+    text-align: left;
+    border: 1px solid #e9ecef;
+    border-width: 0 0 1px 0;
+    padding: 1rem 1rem;
+    border-width: 1px;
+}

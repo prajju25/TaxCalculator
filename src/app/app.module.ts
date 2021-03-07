@@ -12,11 +12,17 @@ import {ButtonModule} from 'primeng/button';
 import {OverlayPanelModule} from 'primeng/overlaypanel';
 import {DropdownModule} from 'primeng/dropdown';
 import { TagModule } from 'primeng/tag';
+import {InputTextModule} from 'primeng/inputtext';
+import { TaxReportComponent } from './modules/tax-report/tax-report.component';
+import { UserDetailComponent } from './modules/user-detail/user-detail.component';
+import { ReactiveFormsModule } from '@angular/forms';
 
 @NgModule({
   declarations: [
     AppComponent,
-    TaxCalculatorComponent
+    TaxCalculatorComponent,
+    TaxReportComponent,
+    UserDetailComponent
   ],
   imports: [
     BrowserModule,
@@ -27,6 +33,8 @@ import { TagModule } from 'primeng/tag';
     OverlayPanelModule,
     DropdownModule,
     TagModule,
+    InputTextModule,
+    ReactiveFormsModule,
     AppRoutingModule
   ],
   providers: [],

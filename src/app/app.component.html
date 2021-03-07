@@ -1,1 +1,10 @@
+<div class="card">
+    <ul class="breadcrumb">
+        <li><a href="/user">User Profile</a>
+            <span class="seperator" *ngIf="location?.pathname != '/user'">></span></li>
+        <li><a href="/taxcalculator" *ngIf="location?.pathname != '/user'">Tax Calculator</a>
+            <span class="seperator" *ngIf="!(location?.pathname == '/user' || location?.pathname == '/taxcalculator')">></span></li>
+        <li><a href="/taxreport" *ngIf="!(location?.pathname == '/user' || location?.pathname == '/taxcalculator')">Tax Report</a></li>
+      </ul>
+</div>
 <router-outlet></router-outlet>

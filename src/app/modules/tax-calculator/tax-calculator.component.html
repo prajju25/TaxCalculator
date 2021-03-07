@@ -1,27 +1,10 @@
 <div class="container">
-    <div class="card user-app" *ngIf="!taxCalTab">
-        <div class="p-grid p-fluid">
-            <div class="p-mt-3 p-ml-6">
-                <div class="p-inputgroup">
-                    <span class="p-inputgroup-addon"><i class="pi pi-user"></i></span>
-                    <input type="text" pInputText placeholder="Username">         
-                </div>
-            </div>
-            <div class="p-mt-3 p-ml-6">
-                <div class="p-inputgroup">
-                    <span class="p-inputgroup-addon">Age</span>
-                    <input id="Age" type="number" [ngClass]="{'p-invalid':isError}" aria-describedby="age-help"  placeholder="Provide Age" pInputText [(ngModel)]="age"/>
-                    <span *ngIf="isError" class="p-invalid p-mt-2 p-ml-2">Invalid Age</span>
-                </div>
-            </div>
-        </div>
-        <div class="btn p-mt-3 p-ml-6">
-            <p-button (click)="changeView()">Submit</p-button>
-        </div>
+    <div class="card user-app" *ngIf="isLoading">
+        <i class="pi pi-spin pi-spinner" style="font-size: 4rem"></i>
     </div>
-    <div class="card" *ngIf="taxCalTab">
-        <p-tabView [(activeIndex)]="index" (onChange)="openNext()">
-            <p-tabPanel header="Gross Salary" [disabled]="checkDisabled(0)">
+    <div class="card" *ngIf="!isLoading">
+        <p-tabView [(activeIndex)]="index" (onChange)="clickTab(index)">
+            <p-tabPanel header="Gross Salary">
                 <div class="p-grid">
                     <div class="p-field p-col-3">
                         <label for="basic">BASIC</label>
@@ -81,7 +64,7 @@
                     </div>
                 </div>
             </p-tabPanel>
-            <p-tabPanel header="Total Exemptions" [disabled]="checkDisabled(1)">
+            <p-tabPanel header="Total Exemptions">
                 <div class="p-grid">
                     <div class="p-field p-col-3">
                         <label for="ltaExempt">LTA</label>
@@ -109,7 +92,7 @@
                     </div>
                 </div>
             </p-tabPanel>
-            <p-tabPanel header="Section 16 deduction" [disabled]="checkDisabled(2)">
+            <p-tabPanel header="Section 16 deduction">
                 <div class="p-grid">
                     <div class="p-field p-col-3">
                         <label for="standardDeduct">STANDARD DEDUCTION</label>
@@ -118,21 +101,6 @@
                     <div class="p-field p-col-3">
                         <label for="profTax">PROFESSIONAL TAX</label>
                         <input id="profTax" type="number" pInputText [(ngModel)]="profTax"  (change)="everyChange(index)"/>
-                        <p-overlayPanel #op [showCloseIcon]="true" [style]="{width: '300px',height:'300px'}">
-                            <ng-template pTemplate>                                
-                                <label for="state">Select State</label>
-                                <p-dropdown id="state" [options]="states" [(ngModel)]="selectedState" placeholder="Select a State" optionLabel="name"
-                                [showClear]="true" (ngModelChange)="selectedState?.code != 'MH' && calculateProfessionalTax()"></p-dropdown>
-                                <label *ngIf="selectedState?.code == 'MH'" for="gender">Gender</label>
-                                <p-dropdown *ngIf="selectedState?.code == 'MH'" id="gender" [options]="gender" [(ngModel)]="selectedGender" placeholder="Select Gender" optionLabel="name"
-                                [showClear]="true" (ngModelChange)="calculateProfessionalTax()"></p-dropdown>
-                                <p-tag  class="calculate-tax" *ngIf="(selectedState?.code != 'MH') || (selectedGender && selectedState?.code == 'MH')">
-                                    Professional Tax : {{tempTax}}
-                                </p-tag>
-                                <button pButton class="dialog-button" label="Clear" (click)="clearTax()"></button>
-                            </ng-template>
-                        </p-overlayPanel>                        
-                        <button type="text" class="calculate-tax" pButton label="Calculate Prof. Tax" (click)="op.toggle($event)"></button>
                     </div>
                     <div class="p-field p-col-3">
                         <label for="prevPT">PREV PT</label>
@@ -144,7 +112,7 @@
                     </div>
                 </div>
             </p-tabPanel>
-            <p-tabPanel header="Other Incomes" [disabled]="checkDisabled(3)">
+            <p-tabPanel header="Other Incomes">
                 <div class="p-grid">
                     <div class="p-field p-col-3">
                         <label for="lossSelfProperty">Loss from Self Occupied Property</label>
@@ -164,7 +132,7 @@
                     </div>
                 </div>
             </p-tabPanel>
-            <p-tabPanel header="80C Deduction" [disabled]="checkDisabled(4)">
+            <p-tabPanel header="80C Deduction">
                 <div class="p-grid">
                     <div class="p-field p-col-3">
                         <label for="pf">PF</label>
@@ -240,7 +208,7 @@
                     </div>
                 </div>
             </p-tabPanel>
-            <p-tabPanel header="Deduction under Chapter VI-A" [disabled]="checkDisabled(5)">
+            <p-tabPanel header="Deduction under Chapter VI-A">
                 <div class="p-grid">
                     <div class="p-field p-col-3">
                         <label for="medicalInsurance">80-D Medical insurance premium paid for Self / Spouse / Children</label>
@@ -292,7 +260,7 @@
                     </div>
                 </div>
             </p-tabPanel>
-            <p-tabPanel header="Tax Payable" [disabled]="checkDisabled(6)">
+            <p-tabPanel header="Tax Payable">
                 <div class="p-grid">
                     <div class="p-field p-col-3">
                         <label for="totalTaxIncome">TOTAL TAXABLE INCOME</label>
@@ -334,8 +302,9 @@
             </p-tabPanel>
         </p-tabView>
     </div>
-    <div class="btn" *ngIf="taxCalTab">
-        <p-button (click)="openPrev()" [disabled]="grossSalary <= 0">Previous</p-button>
-        <p-button (click)="openNext()" [disabled]="checkDisabled(index)">Next</p-button>
+    <div class="btn" *ngIf="!isLoading">
+        <p-button (click)="openPrev()">Previous</p-button>
+        <p-button (click)="openNext()">Next</p-button>
+        <p-button (click)="viewReport()" [disabled]="index != 6 && taxPayable == 0">View Report</p-button>
     </div>
 </div>

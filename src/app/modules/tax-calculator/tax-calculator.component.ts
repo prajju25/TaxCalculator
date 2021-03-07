@@ -1,4 +1,8 @@
 import { Component, OnInit } from '@angular/core';
+import { ActivatedRoute, Params, Router } from '@angular/router';
+import { CommonService } from 'src/app/service/common-serv.service';
+
+import {Dropdown} from '../../interfaces/dropdown';
 
 @Component({
   selector: 'app-tax-calculator',
@@ -79,41 +83,34 @@ export class TaxCalculatorComponent implements OnInit {
 
   disabled: boolean = true;
   selectedState: Dropdown;
-  states: Dropdown[];
   selectedGender: Dropdown;
-  gender: Dropdown[];
-  tempTax: number = 2400;
   age: number;
-  taxCalTab: boolean = false;
-  isError: boolean = false;
+  isLoading: boolean = true;
 
-  constructor() {
-    this.states = [
-      {name: 'Andhra Pradesh', code: 'AP'},
-      {name: 'Gujarat', code: 'GJ'},
-      {name: 'Karnataka', code: 'KA'},
-      {name: 'Kerala', code: 'KL'},
-      {name: 'Maharashtra', code: 'MH'},
-      {name: 'Telangana', code: 'TL'},
-      {name: 'West Bengal', code: 'WB'}
-    ];
-    this.gender = [
-      {name: 'Male', code: 'M'},
-      {name: 'Female', code: 'F'}
-    ];
+  constructor(private router: Router, private serv: CommonService) {
   }
 
   ngOnInit(): void {
-    this.refresh;
-  }
-
-  changeView(){
-    if(this.age > 0){
-      this.taxCalTab = !this.taxCalTab;
-      this.isError = false;
-    } else {
-      this.isError = true;
+    let user = JSON.parse(sessionStorage.getItem('userInfo'))
+    if(user){
+      this.age = user['age'];
+      this.selectedState = user['state'];
+      this.selectedGender = user['gender'];
     }
+    this.serv.dataShare.subscribe(val => {
+      let params = val['user'];
+      if(params){
+        this.age = params['age'];
+        this.selectedState = params['state'];
+        this.selectedGender = params['gender'];
+        sessionStorage.setItem('userInfo', JSON.stringify(params))
+        this.isLoading = false;
+        this.refresh();
+      } else {        
+        this.isLoading = true;
+      }
+    });
+    this.isLoading = false;
   }
 
   refresh(){    
@@ -148,19 +145,18 @@ export class TaxCalculatorComponent implements OnInit {
 
   CalculateTaxPayable() {
     this.totalTaxIncome = this.grossTotIncome - this.totalDeduct - this.otherDeduct4A;
-    this.taxOnIncome = this.calculateTax()
+    this.taxOnIncome = this.calculateTax(false, null);
     this.taxAfterRebate = this.taxOnIncome > 12000 ? this.taxOnIncome : 0;//changes based on tax regimes
     this.cess = Math.ceil(.04 * this.taxAfterRebate);
     this.annualTaxLiability = this.taxAfterRebate + this.cess;
     this.taxPayable = this.annualTaxLiability - this.taxTillLastMonth;
   }
-  calculateTax(): number {//Changes Based on tax regime
+  calculateTax(newRegime, income): number {//Changes Based on tax regime
     let val = 0;
-    let newRegime = false;
     if(!newRegime){//Old Regime for AY 19-20 & 20-21 
       if(this.age < 60){
         if(this.totalTaxIncome > 1000000){
-          val += ((this.totalTaxIncome - 1000000) * 0.3) + 72500;
+          val += ((this.totalTaxIncome - 1000000) * 0.3) + 112500;
         } else if (this.totalTaxIncome <= 1000000 && this.totalTaxIncome > 500000){
           val += ((this.totalTaxIncome - 500000) * 0.2) + 12500;
         } else if (this.totalTaxIncome <= 500000 && this.totalTaxIncome > 250000){
@@ -182,18 +178,18 @@ export class TaxCalculatorComponent implements OnInit {
         }
       }
     } else {
-      if(this.totalTaxIncome > 1500000){ //New Regime for AY 20-21 
-        val += ((this.totalTaxIncome - 1500000) * 0.3) + 187500;
-      } else if(this.totalTaxIncome <= 1500000 && this.totalTaxIncome > 1250000){
-        val += ((this.totalTaxIncome - 1250000) * 0.25) + 125000;
-      } else if(this.totalTaxIncome <= 1250000 && this.totalTaxIncome > 1000000){
-        val += ((this.totalTaxIncome - 1000000) * 0.2) + 75000;
-      } else if (this.totalTaxIncome <= 1000000 && this.totalTaxIncome > 750000){
-        val += ((this.totalTaxIncome - 750000) * 0.15) + 37500;
-      } else if (this.totalTaxIncome <= 750000 && this.totalTaxIncome > 500000){
-        val += ((this.totalTaxIncome - 500000) * 0.1) + 12500;
-      } else if (this.totalTaxIncome <= 500000 && this.totalTaxIncome > 250000){
-        val += ((this.totalTaxIncome - 250000) * 0.05);
+      if(income > 1500000){ //New Regime for AY 20-21 
+        val += ((income - 1500000) * 0.3) + 187500;
+      } else if(income <= 1500000 && income > 1250000){
+        val += ((income - 1250000) * 0.25) + 125000;
+      } else if(income <= 1250000 && income > 1000000){
+        val += ((income - 1000000) * 0.2) + 75000;
+      } else if (income <= 1000000 && income > 750000){
+        val += ((income - 750000) * 0.15) + 37500;
+      } else if (income <= 750000 && income > 500000){
+        val += ((income - 500000) * 0.1) + 12500;
+      } else if (income <= 500000 && income > 250000){
+        val += ((income - 250000) * 0.05);
       }
     }
     return Math.ceil(val);
@@ -219,7 +215,7 @@ export class TaxCalculatorComponent implements OnInit {
   }
   calculateSec16() {
     this.standardDeduct = this.grossSalary > 50000 ? 50000 : this.grossSalary;//Dynamic changes per tax regime
-    this.profTax = 2400;
+    this.profTax = this.calculateProfessionalTax();
     let val = this.totalExemp + this.standardDeduct + this.profTax + this.prevPT;
     this.salAfterSec16 = this.grossSalary > val ? this.grossSalary - val : 0;
   }
@@ -244,12 +240,7 @@ export class TaxCalculatorComponent implements OnInit {
       val = 12 * (this.grossSalary > (40000*12) ? 200 : (this.grossSalary > (25000*12) ? 150 : 
       (this.grossSalary > (15000*12) ? 130 : (this.grossSalary <= (10000*12) ? 0 : 110))))
     }
-    this.tempTax = val;
-  }
-  clearTax(){
-    this.tempTax = null;
-    this.selectedState = null;
-    this.selectedGender = null;
+    return val;
   }
   calculateExemp() {
     let val = Math.ceil(this.rentPaid - (.10 * this.basic));
@@ -260,6 +251,11 @@ export class TaxCalculatorComponent implements OnInit {
   calculateGrossSalary() {
     this.grossSalary = this.basic + this.hra + this.transport + this.adhocAllowance + this.otherAllowance + this.nsa 
     + this.meals + this.variable + this.onCallAllowance + this.giftVoucher + this.lta + this.statBonus + this.prevIncome;
+  }
+
+  clickTab(index1){
+    console.log(index1);
+    console.log(this.index);
   }
   
   openNext() {
@@ -272,32 +268,31 @@ export class TaxCalculatorComponent implements OnInit {
       this.refresh();
   }
 
-  checkDisabled(index): boolean{
-    let isDisabled = true;
-    switch(index){
-      case 0 : {
-        isDisabled = this.grossSalary <= 0;
-        break;
-      }
-      case 2 : {
-        isDisabled = this.salAfterSec16 <= 0;
-        break;
-      }
-      case 3 : {
-        isDisabled = this.grossTotIncome <= 0;
-        break;
-      }
-      default : {
-        isDisabled = this.grossSalary <= 0;
-        break;
+  viewReport(){
+    let tax = this.calculateTax(true, this.grossSalary);
+    let rebate = tax > 12000 ? tax : 0;
+    let cess = Math.ceil(.04 * rebate);
+    let annualTax = rebate + cess;
+    let report = {
+      oldRegime: {
+        grossSalary: this.grossTotIncome,
+        section80C: this.totalDeduct,
+        section4A: this.otherDeduct4A,
+        taxableIncome: this.totalTaxIncome,
+        incomeTax: this.taxOnIncome,
+        cess: this.cess,
+        totalTax: this.annualTaxLiability
+      },
+      newRegime: {
+        grossSalary: this.grossSalary,
+        taxableIncome: this.grossSalary,
+        incomeTax: tax,
+        cess: cess,
+        totalTax: annualTax
       }
     }
-    return isDisabled;
+    this.serv.dataShare.next({'taxReport': report});
+    this.router.navigate(['/taxreport']);
   }
 
-}
-
-interface Dropdown {
-  name: string,
-  code: string
 }

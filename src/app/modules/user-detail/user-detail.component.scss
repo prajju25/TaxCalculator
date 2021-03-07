@@ -1,0 +1,16 @@
+.user-app{
+    height: 500px;
+    margin: auto;
+    width: 50%;
+    padding: 170px 0;
+}
+@media screen and (max-width: 489px) {
+    .p-formgroup-inline {
+        .p-field {
+            margin-bottom: 1em !important;
+        }
+    }
+}
+:host ::ng-deep .p-dropdown .p-dropdown-label{
+    width: 158px !important;
+}

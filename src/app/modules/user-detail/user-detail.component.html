@@ -1,0 +1,47 @@
+<div class="container">
+    <div class="card user-app">
+        <h3>User Details</h3>
+        <form [formGroup]="profileForm">
+            <div class="p-field p-grid">
+                <label for="userName" class="p-col-fixed" style="width:100px"
+                  >User Name</label
+                >
+                <div class="p-col">
+                  <input id="userName" formControlName="name" type="text" pInputText placeholder="Provide Name"/>
+                </div>
+            </div>
+            <div class="p-field p-grid">
+                <label for="age" class="p-col-fixed" style="width:100px"
+                  >Age</label
+                >
+                <div class="p-col">
+                    <input id="age" type="number" formControlName="age" [ngClass]="{'p-invalid':!profileForm?.controls?.age?.valid && profileForm?.controls?.age?.touched}"
+                     aria-describedby="age-help" placeholder="Provide Age" pInputText required/>
+                    <span *ngIf="!profileForm?.controls?.age?.valid && profileForm?.controls?.age?.touched" class="p-invalid p-mt-2 p-ml-2">Invalid Age</span>
+                </div>
+            </div>
+            <div class="p-field p-grid">
+                <label for="state" class="p-col-fixed" style="width:100px"
+                  >State</label
+                >
+                <div class="p-col">
+                    <p-dropdown id="state" [options]="states" formControlName="selectedState" placeholder="Select a State" optionLabel="name"
+                        [showClear]="true" required></p-dropdown>
+                </div>
+            </div>
+            <div class="p-field p-grid">
+                <label for="age" class="p-col-fixed" style="width:100px"
+                  >Gender</label
+                >
+                <div class="p-col">
+                    <p-dropdown id="gender" [options]="gender" formControlName="selectedGender" placeholder="Select Gender" optionLabel="name"
+                        [showClear]="true" required></p-dropdown>
+                </div>
+            </div>
+            <div class="btn p-field p-grid">
+                <p-button [disabled]="!profileForm.valid" label="Submit" (click)="submit()"></p-button>
+            </div>
+        </form>
+    </div>
+</div>
+    
