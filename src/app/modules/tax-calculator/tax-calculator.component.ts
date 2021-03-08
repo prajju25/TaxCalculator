@@ -1,3 +1,4 @@
+import { THIS_EXPR } from '@angular/compiler/src/output/output_ast';
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Params, Router } from '@angular/router';
 import { CommonService } from 'src/app/service/common-serv.service';
@@ -85,6 +86,7 @@ export class TaxCalculatorComponent implements OnInit {
   selectedState: Dropdown;
   selectedGender: Dropdown;
   age: number;
+  name: string;
   isLoading: boolean = true;
 
   constructor(private router: Router, private serv: CommonService) {
@@ -93,19 +95,33 @@ export class TaxCalculatorComponent implements OnInit {
   ngOnInit(): void {
     let user = JSON.parse(sessionStorage.getItem('userInfo'))
     if(user){
+      this.name = user['name']
       this.age = user['age'];
       this.selectedState = user['state'];
       this.selectedGender = user['gender'];
+      let val = sessionStorage.getItem('user-'+this.name);
+      if(val != null){
+        this.fetchTaxInfo(JSON.parse(val));
+      } else {
+        this.fetchTaxInfo(0);
+      }
+      this.refresh();
     }
     this.serv.dataShare.subscribe(val => {
       let params = val['user'];
       if(params){
+        this.name = params['name']
         this.age = params['age'];
         this.selectedState = params['state'];
         this.selectedGender = params['gender'];
         sessionStorage.setItem('userInfo', JSON.stringify(params))
+        let val = sessionStorage.getItem('user-'+this.name);
+        if(val != null){
+          this.fetchTaxInfo(JSON.parse(val));
+        } else {
+          this.fetchTaxInfo(0);
+        }
         this.isLoading = false;
-        this.refresh();
       } else {        
         this.isLoading = true;
       }
@@ -121,6 +137,113 @@ export class TaxCalculatorComponent implements OnInit {
     this.caclulateTotalDeduct();
     this.caclulateTotalDeduct4A();
     this.CalculateTaxPayable();
+    this.retainTaxInfo();
+  }
+
+  fetchTaxInfo(val){
+    this.basic = val ? val['basic'] : val;
+    this.hra = val ? val['hra'] : val;
+    this.transport = val ? val['transport'] : val;
+    this.adhocAllowance = val ? val['adhocAllowance'] : val;
+    this.otherAllowance = val ? val['otherAllowance'] : val;
+    this.nsa = val ? val['nsa'] : val;
+    this.meals = val ? val['meals'] : val;
+    this.variable = val ? val['variable'] : val;
+    this.onCallAllowance = val ? val['onCallAllowance'] : val;
+    this.giftVoucher = val ? val['giftVoucher'] : val;
+    this.lta = val ? val['lta'] : val;
+    this.statBonus = val ? val['statBonus'] : val;
+    this.prevIncome = val ? val['prevIncome'] : val;
+    this.ltaExempt = val ? val['ltaExempt'] : val;
+    this.rentPaid = val ? val['rentPaid'] : val;
+    this.transportExempt = val ? val['transportExempt'] : val;
+    this.leaveEncash = val ? val['leaveEncash'] : val;
+    this.prevPT = val ? val['prevPT'] : val;
+    this.lossSelfProperty = val ? val['lossSelfProperty'] : val;
+    this.incomeProperty = val ? val['incomeProperty'] : val;
+    this.otherIncome = val ? val['otherIncome'] : val;
+    this.pf = val ? val['pf'] : val;
+    this.vpf = val ? val['vpf'] : val;
+    this.ppf = val ? val['ppf'] : val;
+    this.nsc = val ? val['nsc'] : val;
+    this.ctd = val ? val['ctd'] : val;
+    this.hsgLoan = val ? val['hsgLoan'] : val;
+    this.tutionFee = val ? val['tutionFee'] : val;
+    this.elss = val ? val['elss'] : val;
+    this.lic = val ? val['lic'] : val;
+    this.ulip = val ? val['ulip'] : val;
+    this.annuityPlan = val ? val['annuityPlan'] : val;
+    this.pension80CCC = val ? val['pension80CCC'] : val;
+    this.prevPF = val ? val['prevPF'] : val;
+    this.fixedDeposit = val ? val['fixedDeposit'] : val;
+    this.sukanyaSamriddhi = val ? val['sukanyaSamriddhi'] : val;
+    this.nps = val ? val['nps'] : val;
+    this.medicalInsurance = val ? val['medicalInsurance'] : val;
+    this.medicalInsuranceParent = val ? val['medicalInsuranceParent'] : val;
+    this.handicap = val ? val['handicap'] : val;
+    this.medicalDisease = val ? val['medicalDisease'] : val;
+    this.educationLoan = val ? val['educationLoan'] : val;
+    this.phyDisable = val ? val['phyDisable'] : val;
+    this.homeLoan = val ? val['homeLoan'] : val;
+    this.nps80CCD1B = val ? val['nps80CCD1B'] : val;
+    this.nps80CCD2 = val ? val['nps80CCD2'] : val;
+    this.additionalHomeLoan = val ? val['additionalHomeLoan'] : val;
+    this.elecVehicle = val ? val['elecVehicle'] : val;
+    this.refresh();
+  }
+
+  retainTaxInfo(){
+    let obj = {
+      basic: this.basic,
+      hra: this.hra,
+      transport: this.transport,
+      adhocAllowance: this.adhocAllowance,
+      otherAllowance: this.otherAllowance,
+      nsa: this.nsa,
+      meals: this.meals,
+      variable: this.variable,
+      onCallAllowance: this.onCallAllowance,
+      giftVoucher: this.giftVoucher,
+      lta: this.lta,
+      statBonus: this.statBonus,
+      prevIncome: this.prevIncome,
+      ltaExempt: this.ltaExempt,
+      rentPaid: this.rentPaid,
+      transportExempt: this.transportExempt,
+      leaveEncash: this.leaveEncash,
+      prevPT: this.prevPT,
+      lossSelfProperty: this.lossSelfProperty,
+      incomeProperty: this.incomeProperty,
+      otherIncome: this.otherIncome,
+      pf: this.pf,
+      vpf: this.vpf,
+      ppf: this.ppf,
+      nsc: this.nsc,
+      ctd: this.ctd,
+      hsgLoan: this.hsgLoan,
+      tutionFee: this.tutionFee,
+      elss: this.elss,
+      lic: this.lic,
+      ulip: this.ulip,
+      annuityPlan: this.annuityPlan,
+      pension80CCC: this.pension80CCC,
+      prevPF: this.prevPF,
+      fixedDeposit: this.fixedDeposit,
+      sukanyaSamriddhi: this.sukanyaSamriddhi,
+      nps: this.nps,
+      medicalInsurance: this.medicalInsurance,
+      medicalInsuranceParent: this.medicalInsuranceParent,
+      handicap: this.handicap,
+      medicalDisease: this.medicalDisease,
+      educationLoan: this.educationLoan,
+      phyDisable: this.phyDisable,
+      homeLoan: this.homeLoan,
+      nps80CCD1B: this.nps80CCD1B,
+      nps80CCD2: this.nps80CCD2,
+      additionalHomeLoan: this.additionalHomeLoan,
+      elecVehicle: this.elecVehicle
+    }
+    sessionStorage.setItem('user-'+this.name, JSON.stringify(obj));
   }
 
   everyChange(index){

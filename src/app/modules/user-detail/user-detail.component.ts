@@ -49,6 +49,7 @@ export class UserDetailComponent implements OnInit {
   submit(){
     if(this.profileForm.valid){
       let userObj = {
+        name: this.profileForm.value['name'],
         age: this.profileForm.value['age'],
         gender: this.profileForm.value['selectedGender'],
         state: this.profileForm.value['selectedState']
