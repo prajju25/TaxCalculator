@@ -38,18 +38,18 @@
                 <td><em>Tax Slab</em></td>
                 <td>
                     0 to 2.5 Lakh => 0<br>
-                    2.5 to 5 Lakh @ 5% => {{oldRegime.taxableIncome > 250000 ? (oldRegime.taxableIncome <= 500000 ? (oldRegime.taxableIncome - 250000) * 0.05 : 12500) : '-'}}<br>
-                    5 Lakh to 10 Lakh @ 20% => {{oldRegime.taxableIncome > 500000 ? (oldRegime.taxableIncome <= 1000000 ? (oldRegime.taxableIncome - 500000) * 0.2 : 100000) : '-'}}<br>
-                    > 10 Lakh @ 30% => {{oldRegime.taxableIncome > 1000000 ? ((oldRegime.taxableIncome - 1000000) * 0.3) : '-'}}
+                    2.5 to 5 Lakh @ 5% => {{oldRegime.taxableIncome > 250000 ? (oldRegime.taxableIncome <= 500000 ? (oldRegime.taxableIncome - 250000) * 0.05 : 12500) : 'NA'}}<br>
+                    5 Lakh to 10 Lakh @ 20% => {{oldRegime.taxableIncome > 500000 ? (oldRegime.taxableIncome <= 1000000 ? (oldRegime.taxableIncome - 500000) * 0.2 : 100000) : 'NA'}}<br>
+                    > 10 Lakh @ 30% => {{oldRegime.taxableIncome > 1000000 ? ((oldRegime.taxableIncome - 1000000) * 0.3) : 'NA'}}
                 </td>
                 <td>
                     0 to 2.5 Lakh => 0<br>
-                    2.5 to 5 Lakh @ 5% => {{newRegime.taxableIncome > 250000 ? (newRegime.taxableIncome <= 500000 ? (oldRegime.taxableIncome - 250000) * 0.05 : 12500) : '-'}}<br>
-                    5 to 7.5 Lakh @ 10% => {{newRegime.taxableIncome > 500000 ? (newRegime.taxableIncome <= 750000 ? (oldRegime.taxableIncome - 500000) * 0.1 : 25000) : '-'}}<br>
-                    7.5 Lakh to 10 Lakh @ 15% => {{newRegime.taxableIncome > 750000 ? (newRegime.taxableIncome <= 1000000 ? (oldRegime.taxableIncome - 750000) * 0.15 : 37500) : '-'}}<br>
-                    10 Lakh to 12.5 Lakh @ 20% => {{newRegime.taxableIncome > 1000000 ? (newRegime.taxableIncome <= 1250000 ? (oldRegime.taxableIncome - 1000000) * 0.2 : 50000) : '-'}}<br>
-                    12.5 Lakh to 15 Lakh @ 25% => {{newRegime.taxableIncome > 1250000 ? (newRegime.taxableIncome <= 1500000 ? (oldRegime.taxableIncome - 1250000) * 0.25 : 62500) : '-'}}<br>
-                    > 15 Lakh @ 30% => {{newRegime.taxableIncome > 1500000 ? ((newRegime.taxableIncome - 1500000) * 0.3) : '-'}}
+                    2.5 to 5 Lakh @ 5% => {{newRegime.taxableIncome > 250000 ? (newRegime.taxableIncome <= 500000 ? (newRegime.taxableIncome - 250000) * 0.05 : 12500) : 'NA'}}<br>
+                    5 to 7.5 Lakh @ 10% => {{newRegime.taxableIncome > 500000 ? (newRegime.taxableIncome <= 750000 ? (newRegime.taxableIncome - 500000) * 0.1 : 25000) : 'NA'}}<br>
+                    7.5 Lakh to 10 Lakh @ 15% => {{newRegime.taxableIncome > 750000 ? (newRegime.taxableIncome <= 1000000 ? (newRegime.taxableIncome - 750000) * 0.15 : 37500) : 'NA'}}<br>
+                    10 Lakh to 12.5 Lakh @ 20% => {{newRegime.taxableIncome > 1000000 ? (newRegime.taxableIncome <= 1250000 ? (newRegime.taxableIncome - 1000000) * 0.2 : 50000) : 'NA'}}<br>
+                    12.5 Lakh to 15 Lakh @ 25% => {{newRegime.taxableIncome > 1250000 ? (newRegime.taxableIncome <= 1500000 ? (newRegime.taxableIncome - 1250000) * 0.25 : 62500) : 'NA'}}<br>
+                    > 15 Lakh @ 30% => {{newRegime.taxableIncome > 1500000 ? ((newRegime.taxableIncome - 1500000) * 0.3) : 'NA'}}
                 </td>
             </tr>
             <tr>
