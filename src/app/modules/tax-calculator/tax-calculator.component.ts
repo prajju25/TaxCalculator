@@ -114,7 +114,6 @@ export class TaxCalculatorComponent implements OnInit {
         this.age = params['age'];
         this.selectedState = params['state'];
         this.selectedGender = params['gender'];
-        sessionStorage.setItem('userInfo', JSON.stringify(params))
         let val = sessionStorage.getItem('user-'+this.name);
         if(val != null){
           this.fetchTaxInfo(JSON.parse(val));

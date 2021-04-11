@@ -55,6 +55,7 @@ export class UserDetailComponent implements OnInit {
         state: this.profileForm.value['selectedState']
       }
       this.serv.dataShare.next({'user': userObj});
+      sessionStorage.setItem('userInfo', JSON.stringify(userObj))
       this.router.navigate(['/taxcalculator']);
     }
   }

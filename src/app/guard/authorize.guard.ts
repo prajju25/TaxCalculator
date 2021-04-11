@@ -11,9 +11,9 @@ export class AuthorizeGuard implements CanActivate {
   canActivate(
     route: ActivatedRouteSnapshot,
     state: RouterStateSnapshot): Observable<boolean | UrlTree> | Promise<boolean | UrlTree> | boolean | UrlTree {
-    if(location.pathname == "/taxreport" && sessionStorage.getItem('taxReport')){
+    if((location.pathname == "/taxcalculator" || location.pathname == "/taxreport") && sessionStorage.getItem('taxReport')){
       return true;
-    } else if (location.pathname == "/taxreport" && sessionStorage.getItem('userInfo')){
+    } else if ((location.pathname == "/user" || location.pathname == "/taxcalculator") && sessionStorage.getItem('userInfo')){
       return true;
     } else {
       this.route.navigate(['/user']);
