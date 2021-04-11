@@ -35,7 +35,7 @@
                 >
                 <div class="p-col">
                     <p-dropdown id="gender" [options]="gender" formControlName="selectedGender" placeholder="Select Gender" optionLabel="name"
-                        [showClear]="true" required></p-dropdown>
+                        [showClear]="true" required (keyup.enter)="submit()"></p-dropdown>
                 </div>
             </div>
             <div class="btn p-field p-grid">
